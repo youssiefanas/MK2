@@ -9,35 +9,35 @@ To install the necessary software, follow these steps:
 
 1. Install ROS Neotic.
 2. Install Arduino IDE.
-3. Install ROSserial package by running the following commands in your terminal: `sudo apt-get install ros-noetic-rosserial-arduino`
+3. Install ROSserial package by running the following commands in your terminal: `sudo apt-get install ros-noetic-rosserial-arduino`.
 
-`sudo apt-get install ros-noetic-rosserial`
+`sudo apt-get install ros-noetic-rosserial`.
 4. Run the roscore command:
-`roscore`
+`roscore`.
 5. In the Arduino libraries folder, run the ROS node:
-`rosrun rosserial arduino make libraries.py .`
+`rosrun rosserial arduino make libraries.py .`.
 
 6. Install the following libraries:
-- Peter Corke robotics toolbox library
-- Spatial Maths for Python
-- tkinter library for GUI
+- Peter Corke robotics toolbox library.
+- Spatial Maths for Python.
+- tkinter library for GUI.
 
 You can do this by running the following commands in your terminal:
-`pip install robotics-toolbox-python`
-`pip install spatialmath-python`
-`pip install tk`
+`pip install robotics-toolbox-python`.
+`pip install spatialmath-python`.
+`pip install tk`.
 6. Clone the repository:
-`git clone `
+`git clone git@github.com:youssiefanas/MK2.git `.
 7. Copy the MK2_py folder to your ROS workspace (e.g. catkin_ws).
 8. In your workspace directory, run:
-`catkin_make`
+`catkin_make`.
 9. Connect the Arduino board to your computer using a USB cable.
 10. Upload the Arduino sketch (included in this repository) to the board.
 11. Run the following commands in separate terminal windows:
 
-`roscore`
-`rosrun MK2_py MK2_gui.py`
-`rosrun rosserial_arduino serial_node.py /dev/ttyACM0`
+`roscore`.
+`rosrun MK2_py MK2_gui.py`.
+`rosrun rosserial_arduino serial_node.py /dev/ttyACM0`.
 
 
 ## Robot Kinematics
