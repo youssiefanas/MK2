@@ -68,6 +68,13 @@ class MK2GUI:
         self.master.protocol("WM_DELETE_WINDOW", self.on_close_window)
         self.mk2 = MK2()
 
+    
+    def stepper_node_init(self):
+        rospy.init_node("stepper_node", anonymous=True)
+        self.stepper_readings = Vector3()
+        # publish the stepper_base, stepper_shoulder, stepper_elbow to the topic with msg type Vector3
+        self.stepper_joints_pub = rospy.Publisher("/stepper_joints", Vector3, queue_size=10)
+        self.stepper_gripper = rospy.Publisher("/stepper_gripper", Int16, queue_size=10)
 
     def init_frames(self):
         frame = tk.Frame(self.master)
@@ -171,11 +178,11 @@ class MK2GUI:
 
     def home(self):
         self.mk2.plot(home_position_joints, dt=1)
-        stepper_readings = Vector3()
-        stepper_readings.x = home_base
-        stepper_readings.y = home_shoulder
-        stepper_readings.z = home_elbow
-        self.stepper_joints_pub.publish(stepper_readings)
+        self.stepper_readings = Vector3()
+        self.stepper_readings.x = home_base
+        self.stepper_readings.y = home_shoulder
+        self.stepper_readings.z = home_elbow
+        self.stepper_joints_pub.publish(self.stepper_readings)
         
 
     def __call__(self) -> None:
@@ -183,12 +190,6 @@ class MK2GUI:
         self.init_frames()
         self.master.mainloop()
 
-    def stepper_node_init(self):
-        rospy.init_node("stepper_node", anonymous=True)
-        stepper_readings = Vector3()
-        # publish the stepper_base, stepper_shoulder, stepper_elbow to the topic with msg type Vector3
-        self.stepper_joints_pub = rospy.Publisher("/stepper_joints", Vector3, queue_size=10)
-        self.stepper_gripper = rospy.Publisher("/stepper_gripper", Int16, queue_size=10)
 
 
     def gripper_close(self):
@@ -224,12 +225,12 @@ class MK2GUI:
         stepper_base = self.base_slider.get()
         stepper_shoulder = self.shoulder_slider.get()
         stepper_elbow = self.elbow_slider.get()
-        stepper_readings = Vector3()
-        stepper_readings.x = stepper_base
-        stepper_readings.y = stepper_shoulder
-        stepper_readings.z = stepper_elbow
+
+        self.stepper_readings.x = stepper_base
+        self.stepper_readings.y = stepper_shoulder
+        self.stepper_readings.z = stepper_elbow
         # publish the stepper_base, stepper_shoulder, stepper_elbow to the topic with msg type Vector3
-        self.stepper_joints_pub.publish(stepper_readings)
+        self.stepper_joints_pub.publish(self.stepper_readings)
 
     def clear(self):
         self.x_entry.delete(0, "end")
@@ -299,10 +300,16 @@ class MK2GUI:
 
         stepper_base = self.map_range(base_joint, j1_min, j1_max, min_base, max_base)
         # check the range of the stepper_base
-        while stepper_base < min_base or stepper_base > max_base:
+        # while stepper_base < min_base or stepper_base > max_base:
      
-            self.error_label.config(text="error: stepper_base is out of range"+ str(stepper_base))
-            return
+        #     self.error_label.config(text="error: stepper_base is out of range"+ str(stepper_base))
+        #     return
+        if stepper_base > max_base:
+            stepper_base = max_base
+        if stepper_base < min_base:
+            stepper_base = min_base
+
+
         stepper_shoulder = self.map_range(
             shoulder_joint,
             j2_min,
@@ -310,16 +317,33 @@ class MK2GUI:
             min_shoulder,
             max_shoulder,
         )
-        while stepper_shoulder < min_shoulder or stepper_shoulder > max_shoulder:
-            self.error_label.config(text="error: stepper_shoulder is out of range")
-            return
+        # while stepper_shoulder < min_shoulder or stepper_shoulder > max_shoulder:
+        #     self.error_label.config(text="error: stepper_shoulder is out of range")
+        #     return
+        if stepper_shoulder > max_base:
+            stepper_shoulder = max_base
+        if stepper_shoulder < min_base:
+            stepper_shoulder = min_base
+
         stepper_elbow = self.map_range(elbow_joint, j3_min, j3_max, min_elbow, max_elbow)
-        while stepper_elbow < min_elbow or stepper_elbow > max_elbow:
-            self.error_label.config(text="error: stepper_elbow is out of range"+ str(stepper_elbow))
-            return
+        # while stepper_elbow < min_elbow or stepper_elbow > max_elbow:
+        #     self.error_label.config(text="error: stepper_elbow is out of range"+ str(stepper_elbow))
+        #     return
+        if stepper_elbow > max_base:
+            stepper_elbow = max_base
+        if stepper_elbow < min_base:
+            stepper_elbow = min_base
+
         self.stepper_base_label.config(text="stepper_base = " + str(stepper_base))
         self.stepper_shoulder_label.config(text="stepper_shoulder = " + str(stepper_shoulder))
         self.stepper_elbow_label.config(text="stepper_elbow = " + str(stepper_elbow))
+
+        self.stepper_readings.x = stepper_base
+        self.stepper_readings.y = stepper_shoulder
+        self.stepper_readings.z = stepper_elbow
+        # publish the stepper_base, stepper_shoulder, stepper_elbow to the topic with msg type Vector3
+        self.stepper_joints_pub.publish(self.stepper_readings)
+
 
     def on_close_window(self):
         plt.close()
