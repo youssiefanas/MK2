@@ -1,8 +1,10 @@
 # MK2 Robot Arm
 
 This project is a 3 DOF robot arm constructed using 3D printing and powered by stepper motors. The arm is driven by a CNC shield on arduino uno and power supply, and is designed for precise and accurate positioning control.
-In this project both forward and inverse kinematics were constructed to model the robot motion towards the desired postions.
-
+In this project both forward and inverse kinematics were constructed to model the robot motion towards the desired postions.  
+<p align="center">
+<img src = "photos/Robot_view.jpeg" width="480" height="620">
+</p>
 ## Installation and setup
 
 To install the necessary software, follow these steps:
@@ -43,7 +45,11 @@ You install them by running the following commands in your terminal:
 
 ## Robot Kinematics
 
-The robot configuration was constructed using the Peter Corke robotics toolbox. The D-H parameters were solved according to the configuration. The robotics toolbox allows you to solve forward kinematics using the `fkine()` function and inverse kinematics using the `ikine_LM()` function. The workspace of the robot was also identified using the toolbox.
+The robot configuration was constructed using the Peter Corke robotics toolbox. The D-H parameters were solved according to the configuration.  
+
+![](photos/DH_parameters.jpeg)
+
+The robotics toolbox allows you to solve forward kinematics using the `fkine()` function and inverse kinematics using the `ikine_LM()` function. The workspace of the robot was also identified using the toolbox.
 
 
 ## GUI overview
@@ -53,7 +59,12 @@ The GUI for this project allows you to control the MK2 robot arm and make it rea
 To use the GUI, follow these steps:
 
 1. The GUI will appear when you run the ROS node.
-2. Input x, y, z coordinates in the input boxes and press the "Calculate" button to move the robot arm to that position.
+![](photos/GUI_startup.jpeg)
+2. Input x, y, z coordinates in the input boxes and press the "Calculate" button to move the robot arm to that position.  
+
+<img src="photos/pose_gui.jpeg" width="643" height="571"> 
+<img src="photos/simulation_pose.jpeg" width="643" height="571">
+
 3. Use the sliders to move each joint independently.
 4. Press the "Home" button to move the robot arm to its home position.
 5. Press the "Gripper release" and "Gripper Close" buttons to control the gripper.
